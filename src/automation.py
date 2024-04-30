@@ -1,6 +1,9 @@
 import time
 import pyautogui
 import cv2 
+import os
+global template_path
+template_path = os.path.abspath("../images")
 
 def locateArrowOnScreen(gui):
     """
@@ -12,7 +15,9 @@ def locateArrowOnScreen(gui):
     try:
         right_arrow_templates = ["rightAW/rightA(1).png", "rightAW/rightA(2).png","rightAW/rightA(3).png","rightAW/rightA(4).png"]
         for template in right_arrow_templates:
-            rightarrowButtonLocation = pyautogui.locateCenterOnScreen(template, confidence=0.6)
+            # Join the directory path and the template filename
+            arrow_path = os.path.join(template_path, template)
+            rightarrowButtonLocation = pyautogui.locateCenterOnScreen(arrow_path, confidence=0.6)
             if rightarrowButtonLocation:
                 break
         #print(captureButtonLocation, " ", rightarrowButtonLocation)
@@ -30,7 +35,7 @@ def locateButtonOnScreen(gui):
                the confirmed coordinates and default dimensions.
     """
     try:
-        captureButtonLocation = pyautogui.locateOnScreen("rightAW/capture.png", confidence=0.6)
+        captureButtonLocation = pyautogui.locateOnScreen("../images/capture.png", confidence=0.6)
         return captureButtonLocation
     except pyautogui.ImageNotFoundException:
         print("Button not found")
@@ -41,7 +46,7 @@ def locateButtonOnScreen(gui):
 #take screenshot of the Capture button and save
 def take_screenshot(left, top, width, height):
     button_screenshot = pyautogui.screenshot(region=(int(left), int(top), int(width), int(height)))
-    button_screenshot.save("button_screenshot.png")
+    button_screenshot.save("../images/button_screenshot.png")
 
 #Detect the button color by converting to grayscale and comparing each pixel
 def detect_button_color(button_image):
@@ -139,7 +144,8 @@ def automation_sequence(gui, total_photos, stop_event):
             check_stop_event(stop_event)
 
             take_screenshot(left, top, width, height)
-            button_color_changed = detect_button_color('button_screenshot.png')
+            button_path = os.path.join(template_path, "button_screenshot.png")
+            button_color_changed = detect_button_color(button_path)
             
         if elapsed_time > timeout:
             print("Time Out")

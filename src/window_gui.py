@@ -33,7 +33,7 @@ class WindowsGui:
         self.automation_sequence = automation_sequence
 
     def resize_logo(self):
-        logo = Image.open("logo.png")
+        logo = Image.open("../images/logo.png")
         factor = 1.5
         new_width = int(logo.width / factor)
         new_height = int(logo.height / factor)
